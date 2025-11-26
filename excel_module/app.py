@@ -1,8 +1,7 @@
 # excel_module/app.py
 """
-Small CLI entrypoint and sample generator (keeps things simple).
+Small CLI + sample generator for quick testing.
 """
-import argparse
 import logging
 import pandas as pd
 import numpy as np
@@ -33,31 +32,7 @@ def example_flow(path: str, dashboard_name: str = "AutoDashboard", open_in_excel
     sess = Session(path=path)
     sess.load(path)
     sess.clean()
-    sess.write_to_excel(sheet_name="SourceData")
-    sess.create_dashboard(dashboard_name=dashboard_name, visible=False, open_in_excel=open_in_excel)
+    sess.write_to_excel(sheet_name="SourceData", visible=True)
+    sess.create_dashboard(dashboard_name=dashboard_name, visible=True, open_in_excel=open_in_excel)
     sess.close()
     logger.info("Example flow complete. Check workbook: %s", os.path.abspath(path))
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Excel module minimal CLI")
-    parser.add_argument("--generate-sample", action="store_true", help="Create a sample XLSX for testing")
-    parser.add_argument("--input", "-i", type=str, help="Path to Excel (.xlsx) file")
-    parser.add_argument("--dashboard", "-d", type=str, default="AutoDashboard", help="Dashboard sheet name")
-    parser.add_argument("--open", action="store_true", help="Open the saved workbook in Excel after creation (Windows only)")
-    args = parser.parse_args()
-
-    if args.generate_sample:
-        path = generate_sample_xlsx()
-        example_flow(path, dashboard_name=args.dashboard, open_in_excel=args.open)
-    elif args.input:
-        if not os.path.exists(args.input):
-            print(f"Input file not found: {args.input}")
-            return
-        example_flow(args.input, dashboard_name=args.dashboard, open_in_excel=args.open)
-    else:
-        parser.print_help()
-
-
-if __name__ == "__main__":
-    main()
