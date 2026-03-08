@@ -1,0 +1,168 @@
+# ══════════════════════════════════════════════════════════════════
+# ProVA — Python Voice Assistant
+# Requirements file
+# ══════════════════════════════════════════════════════════════════
+#
+# Tested on:  Python 3.9 – 3.12  (recommended: 3.10 or 3.11)
+#             Windows 10 / 11
+#
+# QUICK START
+# ───────────
+#   pip install -r requirements.txt
+#
+# If you hit errors, see the TROUBLESHOOTING section at the bottom.
+#
+# ══════════════════════════════════════════════════════════════════
+
+
+# ── 1. TEXT-TO-SPEECH ─────────────────────────────────────────────
+#
+# pyttsx3: offline TTS engine. Uses Windows SAPI voices (Zira, David)
+# — no internet needed, no API key.
+pyttsx3>=2.90
+
+
+# ── 2. SPEECH RECOGNITION ─────────────────────────────────────────
+#
+# SpeechRecognition: wraps Google STT (en-IN + en-US retry).
+SpeechRecognition>=3.10.0
+
+# PyAudio: microphone capture (required by SpeechRecognition).
+# Windows: pip install PyAudio should work directly.
+# Linux:   sudo apt install portaudio19-dev, then pip install PyAudio
+# Mac:     brew install portaudio, then pip install PyAudio
+PyAudio>=0.2.13
+
+
+# ── 3. FUZZY TEXT MATCHING ────────────────────────────────────────
+#
+# Used in: parser.py (intent matching), voice_module.py (wake word,
+# echo filter), file_manager.py (fuzzy rename/find).
+#
+# Option A (default): fuzzywuzzy + Levenshtein C extension
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.21.0
+#
+# Option B: officially maintained fork — identical API, no warnings.
+#   Uncomment if fuzzywuzzy gives deprecation warnings:
+# thefuzz>=0.20.0
+
+
+# ── 4. EXCEL / DATA ───────────────────────────────────────────────
+#
+# pandas: dataframe operations inside the Excel dashboard module.
+pandas>=2.0.0
+
+# openpyxl: read/write .xlsx files and build dashboard charts.
+openpyxl>=3.1.0
+
+# xlrd: required by pandas to read legacy .xls files (Excel 97-2003).
+# Not needed for .xlsx — only install if you have old .xls datasets.
+xlrd>=2.0.1
+
+# pywin32: Windows COM automation — used by pyttsx3 (TTS engine) for
+# SAPI voice initialisation. NOT used for Excel dashboard generation
+# (that is handled entirely by openpyxl). Windows only.
+pywin32>=306
+
+
+# ── 5. EMAIL ──────────────────────────────────────────────────────
+#
+# python-dotenv: loads Gmail credentials from a .env file so you
+# never hard-code your password. See .env setup notes below.
+python-dotenv>=1.0.0
+
+
+# ── 6. WINDOWS TOAST NOTIFICATIONS ───────────────────────────────
+#
+# winsdk: native Windows Runtime API for rich toast notifications
+# (reminder_module.py Layer 1 of 3-layer toast fallback system).
+# Windows 10 / 11 only. ProVA falls back to PowerShell XML toasts
+# automatically if this is missing — safe to comment out.
+winsdk>=1.0.0b10
+
+
+# ══════════════════════════════════════════════════════════════════
+# STANDARD LIBRARY — no install needed
+# ══════════════════════════════════════════════════════════════════
+#
+# These are part of Python's stdlib — no pip install required:
+#
+#   audioop       — audio RMS energy check
+#                   Python 3.13+: pip install audioop-lts
+#   asyncio       — async reminder scheduling
+#   ctypes        — Windows API calls in computer_control.py
+#   dataclasses   — Command / Result dataclasses  (Python 3.7+)
+#   json          — reminders.json persistence
+#   pathlib       — all file path handling
+#   queue         — TTS speaker thread queue
+#   re            — intent pattern matching
+#   shutil        — file copy / move / delete
+#   smtplib       — Gmail SMTP sending
+#   subprocess    — open apps, PowerShell toast fallback
+#   threading     — background module execution
+#   tkinter       — ProVA UI  (bundled on Windows; Linux below)
+#                   Linux: sudo apt install python3-tk
+#   webbrowser    — web search open-in-browser fallback
+#   zoneinfo      — timezone-aware reminders  (Python 3.9+)
+#                   Python 3.8: pip install backports.zoneinfo
+
+
+# ══════════════════════════════════════════════════════════════════
+# .env FILE — required for the email module
+# ══════════════════════════════════════════════════════════════════
+#
+# Create a file named `.env` in the ProVA project root containing:
+#
+#   GMAIL_ADDRESS=you@gmail.com
+#   GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+#
+# How to get a Gmail App Password:
+#   1. Enable 2-Factor Authentication on your Google account.
+#   2. Go to: Google Account → Security → App Passwords.
+#   3. Create a password for "Mail" / "Windows Computer".
+#   4. Paste the 16-character code into GMAIL_APP_PASSWORD.
+#
+# The email module will not crash if .env is missing — it will
+# prompt you to configure credentials and skip sending.
+
+
+# ══════════════════════════════════════════════════════════════════
+# TROUBLESHOOTING
+# ══════════════════════════════════════════════════════════════════
+#
+# PyAudio fails to install on Windows
+#   pip install pipwin && pipwin install pyaudio
+#   Or download a pre-built wheel:
+#   https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio
+#
+# python-Levenshtein fails (needs C compiler)
+#   Install without it (slower fuzzy matching):
+#     pip install fuzzywuzzy
+#   Or switch to thefuzz (pure Python, no compiler needed):
+#     pip install thefuzz
+#
+# pywin32 needs a post-install step (run once as Administrator)
+#   python -m pywin32_postinstall -install
+#
+# winsdk install error
+#   Comment out the winsdk line — ProVA's toast system has two
+#   other fallback layers (PowerShell XML + plyer) built in.
+#
+# "No working microphone found" at startup
+#   · Windows Settings → Sound → Input → confirm mic is listed
+#   · Windows Settings → Privacy → Microphone → allow app access
+#   · Bluetooth headsets: pair the headset BEFORE starting ProVA
+#
+# audioop not found (Python 3.13+)
+#   pip install audioop-lts
+#
+# tkinter not found (Linux)
+#   sudo apt install python3-tk
+#
+# zoneinfo not found (Python 3.8)
+#   pip install backports.zoneinfo
+
+# Optional noise suppression (improves BT mic clarity, adds ~150ms)
+noisereduce>=2.0.1
+numpy>=1.24.0   # required by noisereduce

@@ -1,0 +1,8 @@
+{
+  "theme": "dark",
+  "noise_suppress": true,
+  "tts_rate": 169,
+  "tts_vol": 1.0,
+  "voice_id": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\TTS_MS_EN-GB_HAZEL_11.0",
+  "wake_word": false
+}
