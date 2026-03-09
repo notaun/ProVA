@@ -1,0 +1,38 @@
+# ── Credentials — NEVER commit these ──────────────────────────────
+.env
+
+# ── Virtual environment ────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Python cache ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ── ProVA runtime data ─────────────────────────────────────────────
+# Reminders and contacts are personal — exclude from repo
+data/reminders.json
+
+# Storage folder contents (user files, not source code)
+storage/*
+!storage/.gitkeep
+
+# Excel dashboard outputs
+modules/excel_module/out/
+modules/excel_module/data/
+
+# ── IDE / editor ───────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.user
+
+# ── OS files ───────────────────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ── Logs ───────────────────────────────────────────────────────────
+*.log
