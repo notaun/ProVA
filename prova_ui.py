@@ -730,6 +730,13 @@ class ProVAApp:
                 elif val:
                     self._input_has_placeholder = False
                     self._input.configure(fg=self._T["TEXT_PRI"])
+        # Notify listen_fn that the user is actively typing.
+        # This resets the capture timeout so it doesn't expire mid-sentence.
+        # Only sent when a module is waiting (text_queue is being monitored).
+        if self._running and not self._input_has_placeholder:
+            val = self._input_var.get()
+            if val and val != self._PLACEHOLDER:
+                self._text_queue.put("__typing__")
 
     def _clear_ph(self, _=None):
         if self._input_has_placeholder:

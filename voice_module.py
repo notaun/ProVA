@@ -470,10 +470,16 @@ def _capture(
             # 2. Check for chat-box input typed during this capture window
             if typed_queue is not None:
                 try:
-                    typed = typed_queue.get_nowait()
-                    if typed and typed.strip():
-                        log.info("_capture: chat input during mic window: %r", typed)
-                        return typed.strip()
+                    item = typed_queue.get_nowait()
+                    if item == "__typing__":
+                        # User is mid-sentence in the chat box — reset the
+                        # timeout so we don't expire while they're still typing.
+                        log.debug("_capture: typing signal received — resetting timeout")
+                        total_waited = 0.0
+                        continue
+                    if item and item.strip():
+                        log.info("_capture: chat input during mic window: %r", item)
+                        return item.strip()
                 except queue.Empty:
                     pass
 
@@ -695,7 +701,9 @@ def run(
             # 1. Immediate check — something already typed before we were called
             try:
                 typed = text_queue.get_nowait()
-                if typed and typed.strip():
+                if typed == "__typing__":
+                    pass  # ignore mid-typing signals at this stage
+                elif typed and typed.strip():
                     log.info("listen_fn: chat input (immediate): %r", typed)
                     callbacks.on_user_speech(typed)
                     return typed.strip()
@@ -709,7 +717,9 @@ def run(
             # 3. Re-check after TTS — user may have typed while ProVA was speaking
             try:
                 typed = text_queue.get_nowait()
-                if typed and typed.strip():
+                if typed == "__typing__":
+                    pass  # ignore mid-typing signals at this stage
+                elif typed and typed.strip():
                     log.info("listen_fn: chat input (post-TTS): %r", typed)
                     callbacks.on_user_speech(typed)
                     return typed.strip()
@@ -722,7 +732,8 @@ def run(
                 result = _capture(recognizer, mic, typed_queue=text_queue)
             if result is None:
                 return None
-            # _capture returns str when chat-box input arrived mid-window
+            # _capture returns str when chat-box input arrived mid-window.
+            # __typing__ signals are consumed internally by _capture — never returned.
             if isinstance(result, str):
                 log.info("listen_fn: chat input (mid-capture): %r", result)
                 callbacks.on_user_speech(result)
@@ -762,6 +773,15 @@ def run(
                 continue
 
             # Typed input
+            # IMPORTANT: check _module_active BEFORE reading text_queue.
+            # If a module (email, file_manager confirm, etc.) is active,
+            # it is waiting on listen_fn() which will drain text_queue itself.
+            # Reading here would steal the typed text before listen_fn sees it,
+            # causing the module to time out and the typed input to be lost.
+            if _module_active.is_set():
+                time.sleep(0.1)
+                continue
+
             try:
                 typed = text_queue.get_nowait()
                 log.info("Typed: %r", typed)
@@ -795,10 +815,6 @@ def run(
                 continue
             except queue.Empty:
                 pass
-
-            if _module_active.is_set():
-                time.sleep(0.1)
-                continue
 
             if Config.WAKE_WORD_ENABLED:
                 callbacks.on_status("IDLE")
