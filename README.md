@@ -208,17 +208,6 @@ pipwin install pyaudio
 
 ---
 
-## Authors
-
-**Nida M. Nadeem Qureshi** — Seat No. 3056798  
-**AunRaza ImranRaza Shaikh** — Seat No. 3056809  
-
-Under the guidance of **Mr. Pragnesh Shah**  
-Department of Data Science, Shree L. R. Tiwari Degree College, Mira Road  
-Affiliated to University of Mumbai · 2025–26
-
----
-
 ## License
 
 This project was submitted as an academic project to the University of Mumbai.
