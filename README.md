@@ -210,6 +210,6 @@ pipwin install pyaudio
 
 ## Author
 
-Aunraza Shaikh. 
-Ty BSc Data Science. 
+Aunraza Shaikh.  
+Ty BSc Data Science.  
 This project was submitted as an academic project to the University of Mumbai.
