@@ -208,6 +208,8 @@ pipwin install pyaudio
 
 ---
 
-## License
+## Author
 
+Aunraza Shaikh
+Ty BSc Data Science
 This project was submitted as an academic project to the University of Mumbai.
