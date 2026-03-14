@@ -2,7 +2,7 @@
 
 > A desktop-based voice assistant for Windows that lets you manage files, send emails, set reminders, launch apps, and generate Excel dashboards — all by speaking or typing.
 
-Built as a BSc Data Science project by **Nida M. Nadeem Qureshi** and **AunRaza ImranRaza Shaikh**  
+Built as a BSc Data Science project by **AunRaza ImranRaza Shaikh**  
 Shree L. R. Tiwari Degree College · University of Mumbai · 2025–26
 
 ---
