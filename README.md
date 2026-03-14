@@ -25,8 +25,13 @@ Voice and typed input are fully interchangeable at every prompt — if ProVA ask
 
 ## Screenshots
 
-> *(Add screenshots of the UI here)*
+### Dark Mode UI
 
+<img src="assets/ProVA_UI_dark.png" width="900">
+
+### Light Mode UI
+
+<img src="assets/ProVA_UI_light.png" width="900">
 ---
 
 ## Installation
